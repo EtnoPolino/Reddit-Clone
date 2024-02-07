@@ -17,20 +17,20 @@ public class MailService {
 
     private final JavaMailSender mailSender;
     private final MailContentBuilder mailContentBuilder;
-    public void sendMail(NotificationEmail notificationEmail){
+     public void sendMail(NotificationEmail notificationEmail){
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom("springreddit@email.com");
             messageHelper.setTo(notificationEmail.getRecipient());
             messageHelper.setSubject(notificationEmail.getSubject());
-            messageHelper.setText(MailContentBuilder.build(notificationEmail.getBody()));
+            messageHelper.setText(mailContentBuilder.build(notificationEmail.getBody()));
         };
 
         try {
             mailSender.send(messagePreparator);
             log.info("Activation email sent !!");
         }catch(MailException e){
-            throw new SpringRedditException("Exception occured when sendind mail to");
+            throw new SpringRedditException("Exception occured when sendind mail to "+notificationEmail.getRecipient());
         }
-    }
+     }
 }
