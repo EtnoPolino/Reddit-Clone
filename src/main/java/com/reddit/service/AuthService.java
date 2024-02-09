@@ -1,5 +1,7 @@
 package com.reddit.service;
 
+import com.reddit.dto.AuthenticateResponse;
+import com.reddit.dto.LoginRequest;
 import com.reddit.dto.RegisterRequest;
 import com.reddit.exceptions.SpringRedditException;
 import com.reddit.model.NotificationEmail;
@@ -7,8 +9,13 @@ import com.reddit.model.User;
 import com.reddit.model.VerificationToken;
 import com.reddit.repository.UserRepository;
 import com.reddit.repository.VerificationTokenRepository;
+import com.reddit.security.JwtProvider;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +31,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
     @Transactional
     public void signup(RegisterRequest registerRequest){
         User user = new User();
@@ -64,5 +73,12 @@ public class AuthService {
         User user = userRepository.findByUsername(username)
                                   .orElseThrow(()-> new SpringRedditException("User not found with name "+username));
         user.setEnabled(true);
+    }
+
+    public AuthenticateResponse login(LoginRequest loginRequest){
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate); // si on veut si un user est lohin ou non, on rgarde juste le securityContext pour l'authentification
+        String token = jwtProvider.generateToken(authenticate);
+        return new AuthenticateResponse(token, loginRequest.getUsername());
     }
 }

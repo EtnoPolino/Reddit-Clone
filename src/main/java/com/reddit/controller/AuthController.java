@@ -1,10 +1,13 @@
 package com.reddit.controller;
 
+import com.reddit.dto.AuthenticateResponse;
+import com.reddit.dto.LoginRequest;
 import com.reddit.dto.RegisterRequest;
 import com.reddit.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final AuthenticationManager authenticationManager;
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@RequestBody RegisterRequest registerRequest){
         authService.signup(registerRequest);
@@ -23,5 +27,10 @@ public class AuthController {
     public ResponseEntity<String> verifyAccount(@PathVariable String token){
         authService.verifyAccount(token);
         return new ResponseEntity<>("Account Activated Successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public AuthenticateResponse login(@RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
     }
 }
