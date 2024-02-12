@@ -26,6 +26,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -33,7 +34,7 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
-    @Transactional
+
     public void signup(RegisterRequest registerRequest){
         User user = new User();
         user.setUsername(registerRequest.getUsername());
@@ -77,8 +78,13 @@ public class AuthService {
 
     public AuthenticateResponse login(LoginRequest loginRequest){
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authenticate); // si on veut si un user est lohin ou non, on rgarde juste le securityContext pour l'authentification
+        SecurityContextHolder.getContext().setAuthentication(authenticate); // si on veut savoir si un user est lohin ou non, on rgarde juste le securityContext pour l'authentification
         String token = jwtProvider.generateToken(authenticate);
-        return new AuthenticateResponse(token, loginRequest.getUsername());
+        //return new AuthenticateResponse(token, loginRequest.getUsername());
+        return AuthenticateResponse.builder()
+                    .authenticateToken(token)
+                    .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                    .username(loginRequest.getUsername())
+                    .build();
     }
 }
