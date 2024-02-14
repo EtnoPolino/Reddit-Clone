@@ -80,7 +80,7 @@ public class AuthService {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate); // si on veut savoir si un user est lohin ou non, on rgarde juste le securityContext pour l'authentification
         String token = jwtProvider.generateToken(authenticate);
-        //return new AuthenticateResponse(token, loginRequest.getUsername());
+
         return AuthenticateResponse.builder()
                     .authenticateToken(token)
                     .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))

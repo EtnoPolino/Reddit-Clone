@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/subreddit")
@@ -24,10 +26,15 @@ public class SubredditController {
     }
 
     @GetMapping
-    public ResponseEntity getAllSubreddit(){
+    public ResponseEntity<List<SubredditDto>> getAllSubreddit(){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(subredditService.getAll());
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<SubredditDto> getSubreddit(@PathVariable Long id){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(subredditService.getSubreddit(id));
+    }
 }
