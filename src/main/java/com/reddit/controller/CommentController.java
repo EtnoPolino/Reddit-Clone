@@ -24,13 +24,13 @@ public class CommentController {
     public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId){
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(commentService.getAllCommentsForPost(postId));
+                    .body(commentService.getAllCommentsByPost(postId));
     }
     @GetMapping("/by-user/{username}")
     public ResponseEntity<List<CommentDto>> getAllCommentsForUser(@PathVariable String username){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(commentService.getAllCommentsForUsername(username));
+                .body(commentService.getAllCommentsByUser(username));
     }
 
 }

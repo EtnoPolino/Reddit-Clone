@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.time.Instant;
 
 @Entity
@@ -25,6 +27,7 @@ public class Post {
     @Nullable
     @Lob
     private String description;
+    @Value("${InitVote}")
     private Integer voteCount;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")

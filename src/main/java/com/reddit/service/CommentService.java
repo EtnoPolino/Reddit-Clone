@@ -52,7 +52,7 @@ public class CommentService {
         mailService.sendMail(new NotificationEmail(user.getUsername() + " commented on your post", user.getEmail(), message));
     }
 
-    public List<CommentDto> getAllCommentsForPost(Long postId) {
+    public List<CommentDto> getAllCommentsByPost(Long postId) {
         Post post = postRepository.findById(postId)
                                   .orElseThrow(()-> new PostNotFoundException(postId.toString()));
         return commentRepository.findByPost(post)
@@ -61,7 +61,7 @@ public class CommentService {
                          .collect(Collectors.toList());
     }
 
-    public List<CommentDto> getAllCommentsForUsername(String username) {
+    public List<CommentDto> getAllCommentsByUser(String username) {
         User user = userRepository.findByUsername(username)
                                   .orElseThrow(()-> new UsernameNotFoundException(username));
 
