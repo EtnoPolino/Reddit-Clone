@@ -43,7 +43,7 @@ public class PostController {
                 .body(postService.getPostsBySubreddit(id));
     }
 
-    @GetMapping("/by-user/{name}")
+    @GetMapping("/by-user/{username}")
     public ResponseEntity<List<PostResponse>> getPostsByUsername(@PathVariable String username){
         return ResponseEntity
                 .status(HttpStatus.OK)

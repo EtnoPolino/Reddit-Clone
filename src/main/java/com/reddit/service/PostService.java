@@ -68,7 +68,7 @@ public class PostService {
                 .map(postMapper::mapPostResponseToDto)
                 .collect(toList());
     }
-
+    @Transactional(readOnly = true)
     public List<PostResponse> getPostsByUsername(String username){
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()-> new UsernameNotFoundException(username));
