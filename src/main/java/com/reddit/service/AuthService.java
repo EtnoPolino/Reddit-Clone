@@ -2,6 +2,7 @@ package com.reddit.service;
 
 import com.reddit.dto.AuthenticateResponse;
 import com.reddit.dto.LoginRequest;
+import com.reddit.dto.RefreshTokenRequest;
 import com.reddit.dto.RegisterRequest;
 import com.reddit.exceptions.SpringRedditException;
 import com.reddit.model.NotificationEmail;
@@ -37,6 +38,7 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     public void signup(RegisterRequest registerRequest){
         User user = new User();
@@ -86,6 +88,7 @@ public class AuthService {
 
         return AuthenticateResponse.builder()
                     .authenticateToken(token)
+                    .refreshToken(refreshTokenService.generateRefreshToken().getToken())
                     .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                     .username(loginRequest.getUsername())
                     .build();
@@ -98,5 +101,17 @@ public class AuthService {
 
         return userRepository.findByUsername(principal.getSubject())
                              .orElseThrow(()-> new UsernameNotFoundException("User name not found - " +principal.getSubject()));
+    }
+
+    public AuthenticateResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+
+        return AuthenticateResponse.builder()
+                .authenticateToken(token)
+                .username(refreshTokenRequest.getUsername())
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .build();
     }
 }

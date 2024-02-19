@@ -36,15 +36,15 @@ public class PostController {
                 .body(postService.getPost(id));
     }
 
-    @GetMapping("/by-subreddit/{id}")
-    public ResponseEntity<List<PostResponse>> getPostsBySubreddit(@PathVariable Long id){
+    @GetMapping(params = "subredditId")
+    public ResponseEntity<List<PostResponse>> getPostsBySubreddit(@RequestParam Long subredditId){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(postService.getPostsBySubreddit(id));
+                .body(postService.getPostsBySubreddit(subredditId));
     }
 
-    @GetMapping("/by-user/{username}")
-    public ResponseEntity<List<PostResponse>> getPostsByUsername(@PathVariable String username){
+    @GetMapping(params = "username")
+    public ResponseEntity<List<PostResponse>> getPostsByUsername(@RequestParam String username){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(postService.getPostsByUsername(username));

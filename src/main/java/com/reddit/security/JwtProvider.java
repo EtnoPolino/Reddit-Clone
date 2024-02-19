@@ -24,7 +24,7 @@ public class JwtProvider {
     private Long jwtExpirationInMillis; // date de fin de validité de notre token
 
 
-    private String generateTokenWithUserName(String username){
+    public String generateTokenWithUserName(String username){
         JwtClaimsSet claims = JwtClaimsSet
                                 .builder()
                                 .issuer("self")
@@ -40,6 +40,5 @@ public class JwtProvider {
         User principal = (User) authentication.getPrincipal();
         return generateTokenWithUserName(principal.getUsername());
     }
-
 
 }

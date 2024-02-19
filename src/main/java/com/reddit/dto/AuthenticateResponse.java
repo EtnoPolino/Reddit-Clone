@@ -14,5 +14,7 @@ import java.time.Instant;
 public class AuthenticateResponse {
     private String authenticateToken;
     private String username;
+    //for the logout. refresh token
+    private String refreshToken;
     private Instant expiresAt;
 }
