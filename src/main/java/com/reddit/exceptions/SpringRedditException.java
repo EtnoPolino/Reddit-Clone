@@ -5,5 +5,7 @@ public class SpringRedditException extends RuntimeException{
         super(exceptionMessage);
     }
 
-
+    public SpringRedditException(String exMessage, Exception exception) {
+        super(exMessage, exception);
+    }
 }
