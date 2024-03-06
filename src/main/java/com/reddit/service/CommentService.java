@@ -44,12 +44,13 @@ public class CommentService {
         commentRepository.save(commentToSave);
 
         //envoyer un email/notif chaque fois que quelqu'un répond au post
-        String message = mailContentBuilder.build(post.getUser().getUsername() + " posted a comment on your post. "+POST_URL);
+        String message = mailContentBuilder.build(currentUser.getUsername() + " posted a comment on your post. "+POST_URL); //normalement l'URL du post
         sendCommentNotification(message, post.getUser());
     }
 
     private void sendCommentNotification(String message, User user) {
-        mailService.sendMail(new NotificationEmail(user.getUsername() + " commented on your post", user.getEmail(), message));
+        User currentUser = authService.getCurrentUser();
+        mailService.sendMail(new NotificationEmail(currentUser.getUsername() + " commented on your post", user.getEmail(), message));
     }
 
     public List<CommentDto> getAllCommentsByPost(Long postId) {

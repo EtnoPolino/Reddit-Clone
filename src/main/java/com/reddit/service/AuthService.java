@@ -93,7 +93,7 @@ public class AuthService {
                     .username(loginRequest.getUsername())
                     .build();
     }
-
+    @Transactional(readOnly = true)
     public User getCurrentUser() {
         Jwt principal = (Jwt) SecurityContextHolder.getContext()
                                                    .getAuthentication()

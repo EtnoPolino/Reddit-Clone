@@ -26,9 +26,9 @@ public abstract class PostMapper {
 
     @Mapping(target = "createdDate", expression = "java(java.time.Instant.now())")
     @Mapping(target = "subreddit", source = "subreddit")
-    @Mapping(target = "user", source = "user")
     @Mapping(target = "description", source = "postRequest.description")
     @Mapping(target = "voteCount", constant = "0")
+    @Mapping(target = "user", source = "user")
     public abstract Post mapPostToPostRequest(PostRequest postRequest, Subreddit subreddit, User user); //create a post from the Post request Object
 
     @Mapping(target = "id", source = "postId")
